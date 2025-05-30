@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChildren } from '@angular/core';
 import { PatchParametersService } from '../../services/patch-parameters/patch-parameters.service';
 import { CommonModule } from '@angular/common';
 import { debounce } from '../../utilities/debounce';
@@ -12,12 +12,11 @@ import { SequenceDataService } from '../../services/sequence-data/sequence-data.
 })
 export class GridComponent {
 
-  private stepsPerBeat = 8;
-  private totalBeats = 4;
+
 
   public gridBeats: number[][] = [];
   public noteRows: string[];
-
+  @ViewChildren('[data-active]') activeCells!: ElementRef;
   constructor(public params: PatchParametersService, private sequenceData: SequenceDataService) {
     this.noteRows = [
       "C3",
@@ -30,12 +29,12 @@ export class GridComponent {
       "C4",
     ].reverse();
 
+    this.sequenceData.clear$.subscribe(()=>{
+      console.log(this.activeCells);
+    });
+
+
   }
-  // @HostListener('mouseover', ['$event.target'])
-  // @debounce()
-  // onMouseover(target: HTMLElement) {
-  //   console.log('target', target);
-  // }
 
   @HostListener('click', ['$event.target'])
   @debounce(50)
@@ -65,8 +64,8 @@ export class GridComponent {
   }
 
   private generateGrid() {
-    this.gridBeats = Array.from({ length: this.totalBeats }, () =>
-      Array.from({ length: this.stepsPerBeat }, (_, j) => j + 1)
+    this.gridBeats = Array.from({ length: this.params.numberOfBeats }, () =>
+      Array.from({ length: this.params.stepsPerBeat }, (_, j) => j + 1)
     );
   }
 }

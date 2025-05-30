@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class PatchParametersService {
   public tempo: number = 120; // Default tempo in BPM
   public numberOfBeats: number = 4; // Default number of beats in the sequence
-  public stepsPerBeat: number = 2; // Default steps per beat (16th notes)
+  public stepsPerBeat: number = 8; // Default steps per beat (16th notes)
   public sequence: Array<[string, { duration: number, rawAttack: number }]> = [];
 
   public get stepDuration(): number {

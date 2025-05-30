@@ -7,14 +7,21 @@
     border: 1px 1px 0 1px solid #ccc;
     align-content: stretch;
     align-items:stretch;
-
+    &:hover {
+        background-color: #e50b0b28!important;
+        >.note-name {
+            background-color: #390b0b79;
+            color: #fff;
+        }
+    }
     .note-name {
         width:66px;
-        background-color: #e5f504a7;
+        background-color: #2d2d2d;
+        color:#fff;
         padding: 8px;
-        font-weight: bold;
-        font-size:11px;
+        font-size:13px;
         border-right: 1px solid #ccc;
+        text-align: center;
     }
     &:first-child {
         border-top: 1px solid #ccc;

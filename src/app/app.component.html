@@ -11,6 +11,7 @@
     <button mat-mini-fab (click)="stop()">
       <mat-icon>stop</mat-icon>
     </button>
+    <button (click)="sequenceData.clear$.next(undefined)">Clear</button>
   </header>
   <article>
     <app-grid></app-grid>

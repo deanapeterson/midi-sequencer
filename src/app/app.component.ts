@@ -13,6 +13,7 @@ import {
 import { MidiPortsService } from './services/midi-ports/midi-ports.service';
 import { PatchParametersService } from './services/patch-parameters/patch-parameters.service';
 import { WebMidiService } from './services/web-midi/web-midi.service';
+import { SequenceDataService, StepNote } from './services/sequence-data/sequence-data.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ export class AppComponent {
   inputs!: MidiInput[];
   outputs!: MidiOutput[];
   stop$ = new Subject<void>();
-  constructor(private webMidi: WebMidiService, private ports: MidiPortsService, private patchParameters: PatchParametersService) {
+  constructor(private webMidi: WebMidiService, private ports: MidiPortsService, private patchParameters: PatchParametersService, public sequenceData: SequenceDataService) {
     this.webMidi.ready$.then(() => {
       this.onEnabled();
     });
@@ -57,40 +58,32 @@ export class AppComponent {
   play() {
 
     const stepSizeMs = this.patchParameters.stepSizeMs; // Get step size in milliseconds
-
-    const sequence = [
-      ["C3", { duration: stepSizeMs, }],
-      ["D3", { duration: stepSizeMs, }],
-      ["E3", { duration: stepSizeMs, }],
-      ["F3", { duration: stepSizeMs, }],
-      ["G3", { duration: stepSizeMs, }],
-      ["A3", { duration: stepSizeMs, }],
-      ["B3", { duration: stepSizeMs, }],
-      ["C4", { duration: stepSizeMs, }],
-    ];
-
     const timer = interval(stepSizeMs); // Convert step size to milliseconds
 
     const current$ = timer.pipe(
       takeUntil(this.stop$), // Stop the sequence when stop$ emits
       map(index => {
-        const noteIndex = index % sequence.length; // Loop through the sequence
+        const noteIndex = index % this.sequenceData.steps.length; // Loop through the sequence
         console.log(`Step: ${index}, ${noteIndex}`);
-        return sequence[noteIndex];
+        return this.sequenceData.steps[noteIndex];
       }),
     );
 
     const end$ = current$.pipe(
-      take(sequence.length)
+      take(this.sequenceData.steps.length)
     )
 
-    end$.subscribe(([note, options]) => {
+    end$.subscribe((stepData: StepNote[]) => {
       if (!this.outputChannel) {
         console.error("No MIDI output channel available.");
         this.stop$.next();
         return;
       }
-      this.outputChannel.playNote(note as string, options as any);
+
+      stepData.forEach((item) => {
+        this.outputChannel?.playNote(item.name as string, item.options as any);
+      })
+
     });
   }
 }

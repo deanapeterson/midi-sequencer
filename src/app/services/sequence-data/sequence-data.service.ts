@@ -1,5 +1,6 @@
 import { Injectable, OutputOptions } from '@angular/core';
 import { PatchParametersService } from '../patch-parameters/patch-parameters.service';
+import { Subject } from 'rxjs';
 
 
 interface PlayNoteOptions {
@@ -11,7 +12,7 @@ interface PlayNoteOptions {
   time?: number | string;
 }
 
-interface Note {
+export interface StepNote {
   name: string;
   options?: PlayNoteOptions;
 }
@@ -21,11 +22,15 @@ interface Note {
 })
 export class SequenceDataService {
 
-  public steps: Note[][] = [];
+  public steps: StepNote[][] = [];
   public noteRows: string[] = ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'];
-
+  public clear$ = new Subject();
   constructor(public params: PatchParametersService) {
+    this.generate();
 
+    this.clear$.asObservable().subscribe(()=>{
+      this.steps = [];
+    })
   }
 
 
@@ -50,13 +55,31 @@ export class SequenceDataService {
       return;
     }
 
-    const stepIndex = beatNumber * this.params.stepsPerBeat;
-    
-    // console.log(`Updating sequence data at index: ${stepIndex} for note: ${note}, beat: ${beat}, step: ${step}`);
+    const stepIndex = (((beatNumber - 1) * this.params.stepsPerBeat) + (stepNumber - 1));
 
-
-    // Logic to update the sequence data based on the note, beat, and step
-    console.log(`@ stepIndex:  ${stepIndex} ${add ? 'Adding' : 'Removing'} sequence data for note: ${note}, beat: ${beat}, step: ${step}`);
-    // Here you would typically update an internal data structure or send this data to a server
+    console.log(`@ stepIndex: ${stepIndex} ${add ? 'Adding' : 'Removing'} sequence data for note: ${note}, beat: ${beatNumber}, step: ${stepNumber}`);
+    this.updateStep(stepIndex, note, add);
   }
+
+  
+  private updateStep(stepIndex: number, note: string, add: boolean): void {
+    const stepData = this.steps[stepIndex];
+
+    if(!add){
+      const noteIndex = stepData.findIndex(n => n.name === note);
+      if (noteIndex !== -1) {
+        stepData.splice(noteIndex, 1);
+      }
+      return;
+    }
+
+
+    stepData.push({
+      name: note,
+      options: {
+        duration: 0.5
+      }
+    })
+  }
+
 }
