@@ -16,8 +16,7 @@ export class GridComponent {
 
   public gridBeats: number[][] = [];
   public noteRows: string[];
-  @ViewChildren('[data-active]') activeCells!: ElementRef;
-  constructor(public params: PatchParametersService, private sequenceData: SequenceDataService) {
+  constructor(public params: PatchParametersService, private sequenceData: SequenceDataService, private elRef:ElementRef) {
     this.noteRows = [
       "C3",
       "D3",
@@ -30,14 +29,17 @@ export class GridComponent {
     ].reverse();
 
     this.sequenceData.clear$.subscribe(()=>{
-      console.log(this.activeCells);
+      const actives:NodeList = elRef.nativeElement.querySelectorAll('[data-active = "true"]');
+      Array.from(actives).forEach((item: Node)=> {
+        delete (item as HTMLElement).dataset['active'];
+      })
     });
 
 
   }
 
   @HostListener('click', ['$event.target'])
-  @debounce(50)
+  // @debounce(50)
   onClick(target: HTMLElement) {
     const active = target.dataset['active'] === 'true';
 

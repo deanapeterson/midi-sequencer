@@ -14,6 +14,7 @@ interface PlayNoteOptions {
 
 export interface StepNote {
   name: string;
+  stepDuration?: number;
   options?: PlayNoteOptions;
 }
 
@@ -29,7 +30,7 @@ export class SequenceDataService {
     this.generate();
 
     this.clear$.asObservable().subscribe(()=>{
-      this.steps = [];
+      this.generate();
     })
   }
 

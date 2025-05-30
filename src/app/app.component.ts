@@ -64,13 +64,13 @@ export class AppComponent {
       takeUntil(this.stop$), // Stop the sequence when stop$ emits
       map(index => {
         const noteIndex = index % this.sequenceData.steps.length; // Loop through the sequence
-        console.log(`Step: ${index}, ${noteIndex}`);
+        // console.log(`Step: ${index}, ${noteIndex}`);
         return this.sequenceData.steps[noteIndex];
       }),
     );
 
     const end$ = current$.pipe(
-      take(this.sequenceData.steps.length)
+      // take(this.sequenceData.steps.length)
     )
 
     end$.subscribe((stepData: StepNote[]) => {
@@ -80,7 +80,7 @@ export class AppComponent {
         return;
       }
 
-      stepData.forEach((item) => {
+      (stepData || []).forEach((item) => {
         this.outputChannel?.playNote(item.name as string, item.options as any);
       })
 
