@@ -1,3 +1,17 @@
 
+@for(note of noteRows; track $index; ) {
+    <div class="note-row" [ngClass]="{'odd': $odd}">
+        <div class="note-name">{{note}}</div>
 
-
+        @for(beat of gridBeats; track $index) {
+            @let beatNo = $index + 1;
+            @for(step of beat;track $index; let beatStart = $first) {
+                <div class="step-block"
+                [attr.data-step]="step"
+                [attr.data-beat]="beatNo"
+                [attr.data-note]="note"
+                [ngClass]="{'beat-start': beatStart, 'last': $last}" title="{{step}}"></div>
+            }
+        }
+    </div>
+}

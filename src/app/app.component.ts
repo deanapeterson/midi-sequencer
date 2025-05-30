@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { GridComponent } from './components/grid/grid.component';
 import {
-    SelectMidiInputOutputComponent
+  SelectMidiInputOutputComponent
 } from './components/select-midi-input-output/select-midi-input-output.component';
 import { MidiPortsService } from './services/midi-ports/midi-ports.service';
 import { PatchParametersService } from './services/patch-parameters/patch-parameters.service';
@@ -59,14 +59,14 @@ export class AppComponent {
     const stepSizeMs = this.patchParameters.stepSizeMs; // Get step size in milliseconds
 
     const sequence = [
-      ["C3", { duration: stepSizeMs, rawAttack: 10 }],
-      ["D3", { duration: stepSizeMs, rawAttack: 30 }],
-      ["E3", { duration: stepSizeMs, rawAttack: 50 }],
-      ["F3", { duration: stepSizeMs, rawAttack: 70 }],
-      ["G3", { duration: stepSizeMs, rawAttack: 90 }],
-      ["A3", { duration: stepSizeMs, rawAttack: 100 }],
-      ["B3", { duration: stepSizeMs, rawAttack: 110 }],
-      ["C4", { duration: stepSizeMs, rawAttack: 127 }],
+      ["C3", { duration: stepSizeMs, }],
+      ["D3", { duration: stepSizeMs, }],
+      ["E3", { duration: stepSizeMs, }],
+      ["F3", { duration: stepSizeMs, }],
+      ["G3", { duration: stepSizeMs, }],
+      ["A3", { duration: stepSizeMs, }],
+      ["B3", { duration: stepSizeMs, }],
+      ["C4", { duration: stepSizeMs, }],
     ];
 
     const timer = interval(stepSizeMs); // Convert step size to milliseconds

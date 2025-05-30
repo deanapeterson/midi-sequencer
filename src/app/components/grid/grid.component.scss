@@ -1,0 +1,45 @@
+.note-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin: auto;
+    width:66vw;
+    border: 1px 1px 0 1px solid #ccc;
+    align-content: stretch;
+    align-items:stretch;
+
+    .note-name {
+        width:66px;
+        background-color: #e5f504a7;
+        padding: 8px;
+        font-weight: bold;
+        font-size:11px;
+        border-right: 1px solid #ccc;
+    }
+    &:first-child {
+        border-top: 1px solid #ccc;
+    }
+
+    &:last-child {
+        border-bottom: 1px solid #ccc;
+    }
+
+    &.odd {
+        background-color: #f9f9f9;
+    }
+
+    >.step-block {
+        flex: 1 1 0;
+
+        border-left: 1px solid #ccc;
+
+
+        &.beat-start {
+            background-color: #0ba8dd62;
+        }
+
+        &:last-child {
+            border-right: 1px solid #ccc;
+        }
+    }
+}
