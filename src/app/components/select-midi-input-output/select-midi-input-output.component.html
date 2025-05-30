@@ -1,0 +1,56 @@
+<div class="columns-4 gap-4">
+  <div>
+
+    <mat-form-field>
+      <mat-label>Select Input Port</mat-label>
+      <mat-select [value]="ports.selectedInputPort" (selectionChange)="ports.setInputPort($event.value)">
+        @for (port of ports.availableInputs; track port.name) {
+        <mat-option [value]="port">{{port.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
+
+    <mat-form-field>
+      <mat-label>Select Output Port</mat-label>
+      <mat-select [value]="ports.selectedOutputPort" (selectionChange)="ports.setOutputPort($event.value)">
+        @for (port of ports.availableOutputs; track port.name) {
+        <mat-option [value]="port">{{port.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
+
+    <mat-form-field>
+      <mat-label>Select Tempo</mat-label>
+          <mat-select [value]="params.tempo" (selectionChange)="params.setTempo($event.value)">
+            @for (i of availableTempos; track $index) {
+            <mat-option [value]="i">{{i}}</mat-option>
+            }
+          </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
+
+    <mat-form-field>
+      <mat-label>Steps Per Beat</mat-label>
+          <mat-select [value]="params.stepsPerBeat" (selectionChange)="params.setStepsPerBeat($event.value)">
+            @for (i of availableStepsPerBeat; track $index) {
+            <mat-option [value]="i">{{i}}</mat-option>
+            }
+          </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>Number of Beats</mat-label>
+          <mat-select [value]="params.numberOfBeats" (selectionChange)="params.setNumberOfBeats($event.value)">
+            @for (i of availableBeats; track $index) {
+            <mat-option [value]="i">{{i}}</mat-option>
+            }
+          </mat-select>
+    </mat-form-field>
+  </div>
+</div>

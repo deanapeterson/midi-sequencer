@@ -1,0 +1,30 @@
+
+
+
+Midi signal contains 3 bytes
+Byte 1 - Command/Channel
+    first 4 digits represent Command
+    second 4 digits indicate channel
+
+    example: 1001|1010 (154)
+        "1001" = , start noteMidi Command (0-15)
+        "1010" = Channel (0-15)
+
+Byte 2 - Note Pitches (0-127)
+    examples: A0 = '21', A#0 = '22', etc
+
+
+Byte 3 - Velocity (0-127)
+
+MIDI API in Browsers
+
+16 steps/120 BPM
+1 beat = 1/4 note 
+60/120 = 0.5 (1 beat = 1/2 a second (500ms))
+Step Length = 0.03125 seconds (31.25ms) (.5 seconds / 16 steps)
+
+Adding Swing
+
+
+
+

@@ -1,0 +1,22 @@
+<div class="columns-1">
+  <header>
+    <h1>Sequencer</h1>
+
+    <app-select-midi-input-output></app-select-midi-input-output>
+  
+    <button mat-mini-fab (click)="play()">
+      <mat-icon>play_circle</mat-icon>
+    </button>
+    &nbsp;
+    <button mat-mini-fab (click)="stop()">
+      <mat-icon>stop</mat-icon>
+    </button>
+  </header>
+  <article>
+    <app-grid></app-grid>
+  </article>
+  <footer>
+
+  </footer>
+
+</div>
