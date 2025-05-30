@@ -1,5 +1,37 @@
 # Sequencer
 
+## About this Project
+
+This is my attempt at creating a effective midi sequencer using Web Technology.
+My reasons for doing this are:
+1. Learning: I want to understand the MIDI protocol better and how it works with it using the web technology.
+2. Scratch an itch:  One of my favorite open source sequencers is stochas.  It's great for free but it, IMHO, has significant usability issues.
+3. My GitHub repos are kind of old.  Just keeping it real.
+
+## Roadmap (Tentative)
+
+- Working MVP/POC (should be there soon)
+  - able to add/remove notes on a grid
+  - be able to press play/stop and hear notes coming from a running synth on my desktop
+- Accurate time clock capability (Deal breaker)
+  - DOM.setTimeout() is not ideal
+  - Options Include: using the AudioApi, requestAnimationFrame, and other. Research needed.
+- Build additional features
+  - Drag to change note length
+  - Randomization of selected notes. (Like Stochas)
+  - Persist prefered ports
+  - local storage of current sequence data
+  - Multiple Layers and patterns per layer.(Like Stochas)
+  - Lot's of things.
+- Possible other features:
+  - Midi file import/export
+  - use browser native sound generation
+
+
+------
+------
+
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.12.
 
 ## Development server

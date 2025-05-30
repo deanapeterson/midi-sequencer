@@ -2,6 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { PatchParametersService } from '../../services/patch-parameters/patch-parameters.service';
 import { CommonModule } from '@angular/common';
 import { debounce } from '../../utilities/debounce';
+import { SequenceDataService } from '../../services/sequence-data/sequence-data.service';
 
 @Component({
   selector: 'app-grid',
@@ -17,7 +18,7 @@ export class GridComponent {
   public gridBeats: number[][] = [];
   public noteRows: string[];
 
-  constructor(public params: PatchParametersService) {
+  constructor(public params: PatchParametersService, private sequenceData: SequenceDataService) {
     this.noteRows = [
       "C3",
       "D3",
@@ -37,13 +38,24 @@ export class GridComponent {
   // }
 
   @HostListener('click', ['$event.target'])
-  @debounce()
+  @debounce(50)
   onClick(target: HTMLElement) {
-    console.log('target', target.dataset);
+    const active = target.dataset['active'] === 'true';
 
+    if (active) {
+      target.dataset['active'] = 'false';
+      target.classList.remove('active');
+    } else {
+      target.dataset['active'] = 'true';
+      target.classList.add('active');
+    }
 
-
-
+    this.sequenceData.updateSequenceData(
+      !active,
+      target.dataset['note'] || '',
+      target.dataset['beat'] || '',
+      target.dataset['step'] || ''
+    );
   }
 
 
