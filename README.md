@@ -18,6 +18,7 @@ My reasons for doing this are:
   - Options Include: using the AudioApi, requestAnimationFrame, and other. Research needed.
 - Build additional features
   - Drag to change note length
+    - Place note element item on the grid, absolute position
   - Randomization of selected notes. (Like Stochas)
   - Persist prefered ports
   - local storage of current sequence data
@@ -27,7 +28,9 @@ My reasons for doing this are:
   - Midi file import/export
   - use browser native sound generation
 
-
+## Ideas
+- custom envelop for a desired controller
+-  
 ------
 ------
 
