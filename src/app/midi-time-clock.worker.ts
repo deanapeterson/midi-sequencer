@@ -20,17 +20,17 @@ self.onmessage = function onMessage(e: MessageEvent) {
     currentInterval = Math.round(currentInterval * 1000) / 1000;
 
     if (timerID) {
-      console.log("MidiTimeClockWorker: already running");
+      // console.log("MidiTimeClockWorker: already running");
       return;
     }
-    console.log("MidiTimeClockWorker: starting with interval", currentInterval);
+    // console.log("MidiTimeClockWorker: starting with interval", currentInterval);
 
     timerID = setInterval(() => {
-      if (performance && performance.now) {
-        console.log("MidiTimeClockWorker: tick at", performance.now());
-      } else {
-        console.warn("MidiTimeClockWorker: performance.now() is not available");
-      }
+      // if (performance && performance.now) {
+      //   // console.log("MidiTimeClockWorker: tick at", performance.now());
+      // } else {
+      //   // console.warn("MidiTimeClockWorker: performance.now() is not available");
+      // }
       postMessage("tick");
     }, currentInterval);
 
@@ -38,7 +38,7 @@ self.onmessage = function onMessage(e: MessageEvent) {
   }
 
   if (e.data == "stop") {
-    console.log("MidiTimeClockWorker: stopping");
+    // console.log("MidiTimeClockWorker: stopping");
     clearInterval(timerID);
     timerID = null;
   }

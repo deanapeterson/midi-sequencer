@@ -7,7 +7,6 @@ export interface TickEvent {
   stepIndex: number;
 }
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -15,6 +14,8 @@ export class MidiTimeClockService implements OnDestroy {
   private worker: Worker | null = null;
   private performance = window.performance;
   public tick$ = new Subject<TickEvent>();
+  public start$ = new Subject<void>();
+  public stop$ = new Subject<void>();
   defaultInterval = 100; // Default interval is 100 milliseconds
 
   constructor(private ngZone: NgZone, private sequenceData: SequenceDataService) { // Replace 'any' with the actual type of sequenceData if available
@@ -32,6 +33,9 @@ export class MidiTimeClockService implements OnDestroy {
     }
     this.worker.terminate();
     this.worker = null;
+    this.tick$.complete();
+    this.start$.complete();
+    this.stop$.complete();
   }
   start(interval: number = this.defaultInterval) {
     if (!this.worker) {
@@ -40,6 +44,7 @@ export class MidiTimeClockService implements OnDestroy {
     }
 
     this.startListening();
+    this.start$.next(); // Emit start event
     this.worker.postMessage(interval);
   }
   stop() {
@@ -47,6 +52,7 @@ export class MidiTimeClockService implements OnDestroy {
       console.error('Worker is not initialized.');
       return;
     }
+    this.stop$.next(); // Emit stop event
     this.worker.onmessage = null; // Clear the message handler
     this.worker.postMessage("stop");
   }

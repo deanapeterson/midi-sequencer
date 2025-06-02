@@ -13,7 +13,7 @@ interface PlayNoteOptions {
 }
 
 export interface StepNote {
-  name: string;
+  note: string;
   stepDuration?: number;
   options?: PlayNoteOptions;
 }
@@ -29,45 +29,37 @@ export class SequenceDataService {
   constructor(public params: PatchParametersService) {
     this.generate();
 
-    this.clear$.asObservable().subscribe(()=>{
+    this.clear$.asObservable().subscribe(() => {
       this.generate();
     })
   }
 
 
   generate() {
-    const beatCount = this.params.numberOfBeats;
-    const stepCount = this.params.stepsPerBeat;
-    const totalSteps = beatCount * stepCount;
-    this.steps = Array.from({ length: totalSteps }, (_, i) => ([]));
+    this.steps = Array.from({ length: this.params.totalSteps }, (_, i) => ([]));
   }
 
-  updateSequenceData(add = true, note: string, beat: string, step: string): void {
-    if (!note || !beat || !step) {
-      console.error('Invalid parameters for updateSequenceData:', { note, beat, step });
+  updateSequenceData(add = true, note: string, stepIndex: string | number): void {
+    if (!note || !stepIndex) {
+      console.error('Invalid parameters for updateSequenceData:', { note, stepIndex });
       return;
     }
 
-    // Convert beat and step to numbers
-    const beatNumber = parseInt(beat, 10);  
-    const stepNumber = parseInt(step, 10);
-    if (isNaN(beatNumber) || isNaN(stepNumber)) {
-      console.error('Invalid beat or step number:', { beat, step });
-      return;
+
+    if (typeof stepIndex === 'string') {
+      stepIndex = parseInt(stepIndex, 10);
     }
 
-    const stepIndex = (((beatNumber - 1) * this.params.stepsPerBeat) + (stepNumber - 1));
-
-    console.log(`@ stepIndex: ${stepIndex} ${add ? 'Adding' : 'Removing'} sequence data for note: ${note}, beat: ${beatNumber}, step: ${stepNumber}`);
+    // console.log(`@ stepIndex: ${stepIndex} ${add ? 'Adding' : 'Removing'} sequence data for note: ${note}, beat: ${beat}, step: ${stepIndex}`);
     this.updateStep(stepIndex, note, add);
   }
 
-  
+
   private updateStep(stepIndex: number, note: string, add: boolean): void {
     const stepData = this.steps[stepIndex];
 
-    if(!add){
-      const noteIndex = stepData.findIndex(n => n.name === note);
+    if (!add) {
+      const noteIndex = stepData.findIndex(n => n.note === note);
       if (noteIndex !== -1) {
         stepData.splice(noteIndex, 1);
       }
@@ -76,7 +68,7 @@ export class SequenceDataService {
 
 
     stepData.push({
-      name: note,
+      note: note,
       options: {
         duration: 0.5
       }

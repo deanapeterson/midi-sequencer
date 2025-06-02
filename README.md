@@ -14,20 +14,27 @@ My reasons for doing this are:
   - able to add/remove notes on a grid
   - be able to press play/stop and hear notes coming from a running synth on my desktop
 - Accurate time clock capability (Deal breaker)
-  - DOM.setTimeout() is not ideal
-  - Options Include: using the AudioApi, requestAnimationFrame, and other. Research needed.
+  - integrate external midi device time clock
+
+
+
 - Build additional features
+  - Computer Keyboard 
+    - "spacebar" start/stop (Change Icon)
+    - 
   - Drag to change note length
     - Place note element item on the grid, absolute position
   - Randomization of selected notes. (Like Stochas)
   - Persist prefered ports
   - local storage of current sequence data
   - Multiple Layers and patterns per layer.(Like Stochas)
-  - Lot's of things.
 - Possible other features:
   - Midi file import/export
   - use browser native sound generation
 
+
+- UX Improvements
+  - 
 ## Ideas
 - custom envelop for a desired controller
 -  

@@ -44,7 +44,7 @@ export class TransportService {
       this.midiTimeClock.tick$.pipe(
         takeUntil(this.stop$), // Stop the sequence when stop$ emits
         map(({stepIndex, time}: TickEvent) => {
-          console.log(`Tick: ${stepIndex}`);
+          // console.log(`Tick: ${stepIndex}`);
 
           // console.log(`Step: ${index}, ${noteIndex}`);
           return this.sequenceData.steps[stepIndex];
@@ -55,15 +55,16 @@ export class TransportService {
           this.stop$.next();
           return;
         }
-        console.log(stepData);
 
-        (stepData || []).forEach((item) => {
-          this.outputChannel?.playNote(item.name as string, {
-            // duration: this.patchParameters.stepSizeMs, // Convert milliseconds to seconds
-            duration: 200, // Convert milliseconds to seconds
-          });
+        setTimeout(() => {
+          (stepData || []).forEach((item) => {
+            this.outputChannel?.playNote(item.note as string, {
+              // duration: this.patchParameters.stepSizeMs, // Convert milliseconds to seconds
+              duration: this.patchParameters.stepSizeMs, // Convert milliseconds to seconds
+            });
+          })
+          
         })
-
       });
       this.midiTimeClock.start(stepSizeMs); // Start the MIDI time clock with the step size
     });
@@ -84,8 +85,8 @@ export class TransportService {
       console.error("No MIDI output channel available.");
       return;
     }
-    this.outputChannel.sendAllNotesOff(); // Stop all notes on the channel
     this.stop$.next(); // Emit a value to stop the sequence
+    this.outputChannel.sendAllNotesOff(); // Stop all notes on the channel
 
   }
 
