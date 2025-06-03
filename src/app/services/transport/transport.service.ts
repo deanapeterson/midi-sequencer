@@ -56,9 +56,7 @@ export class TransportService {
 
         setTimeout(() => {
           (stepData || []).forEach((item) => {
-            this.ports.selectedOutputPort?.playNote(item.note as string, {
-              duration: (this.params.stepSizeMs)
-            });
+            this.ports.selectedOutputPort?.playNote(item.note as string, item.options);
           })
           
         })

@@ -32,7 +32,7 @@ export class SequenceDataService {
       this.generate();
     })
 
-    this.params.updated$.subscribe(()=>{
+    this.params.updated$.subscribe(() => {
       this.generate();
     })
 
@@ -49,10 +49,15 @@ export class SequenceDataService {
   public addNote(stepIndex: number, note: string): void {
     const stepData = this.steps[stepIndex];
 
+    // no duplicate notes on a step.
+    if (this.getNote(stepIndex, note)) {
+      return;
+    }
+
     stepData.push({
       note: note,
       options: {
-        duration: 0.5
+        duration: this.params.stepSizeMs
       }
     })
   }
@@ -66,5 +71,18 @@ export class SequenceDataService {
     return;
   }
 
+  updateNoteDuration(stepIndex: number, noteName: string, stepDuration: number) {
+    const stepNote = this.getNote(stepIndex, noteName);
 
+    if (!stepNote) {
+      return;
+    }
+
+    const stepOptions = stepNote.options || {};
+
+    Object.assign(stepOptions, {
+      duration: stepDuration * this.params.stepSizeMs
+    })
+    stepNote.options = stepOptions;
+  }
 }

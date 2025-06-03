@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, computed, effect, ElementRef, HostListener, input, OnChanges, OnInit, Signal, SimpleChanges, ViewChild } from '@angular/core';
-import { StepNote } from '../../services/sequence-data/sequence-data.service';
+import { SequenceDataService, StepNote } from '../../services/sequence-data/sequence-data.service';
 import { StepBlockDimensions } from '../grid/grid.component';
+import { PatchParametersService } from '../../services/patch-parameters/patch-parameters.service';
 
 
 
@@ -21,11 +22,16 @@ export class NoteComponent implements OnChanges, OnInit {
   public note = input<StepNote>();
   public stepIndex = input<number>();
   public stepBlockDimensions = input<StepBlockDimensions>();
-  private initialWidth!: number;
 
-  private initialCursorX!: number;
+  private dragStartWidth!: number;
+  private dragStartX!: number;
+
   private stepBlockWidth = 0;
-  constructor(private elRef: ElementRef<HTMLElement>) { }
+  constructor(
+    private elRef: ElementRef<HTMLElement>,
+    private params: PatchParametersService,
+    private sequenceData: SequenceDataService
+  ) { }
 
   generateNoteStyleValues(): NoteStyles {
     const sbDim = this.stepBlockDimensions();
@@ -59,15 +65,22 @@ export class NoteComponent implements OnChanges, OnInit {
     this.setElementStyles(this.generateNoteStyleValues());
   }
 
+  get currentWidth() {
+    return this.elRef.nativeElement.offsetWidth;
+  }
 
   onDragStart(event: DragEvent) {
     const { target } = event;
 
-    this.initialWidth = (target as HTMLElement).offsetWidth;
-    this.initialCursorX = event.clientX;
+    this.dragStartWidth = (target as HTMLElement).offsetWidth;
+    this.dragStartX = event.clientX;
 
   }
-
+  onDragEnd(event: DragEvent) {
+    const stepLength = Math.ceil(this.currentWidth / this.stepBlockWidth);
+    this.sequenceData.updateNoteDuration(this.stepIndex() as number, (this.note() as StepNote).note as string, stepLength);
+    console.log(stepLength);
+  }
 
   onDrag(event: DragEvent) {
     const { target } = event;
@@ -76,15 +89,19 @@ export class NoteComponent implements OnChanges, OnInit {
       return;
     }
 
-    const deltaX = event.clientX - this.initialCursorX;
-    const newWidth = this.initialWidth + deltaX;
+    const deltaX = event.clientX - this.dragStartX;
+    const newWidth = this.dragStartWidth + deltaX;
 
-    const snappedX = Math.round(newWidth / this.stepBlockWidth) * this.stepBlockWidth;
-    // const snappedY = Math.round(dy / this.stepBlockWidth) * this.stepBlockWidth;
-    this.initialWidth = snappedX;
+    const updatedWidth = (Math.round(newWidth / this.stepBlockWidth) * this.stepBlockWidth) - 8;
+
+    if (updatedWidth >= this.params.totalSteps * this.stepBlockWidth) {
+      return;
+    }
 
 
-    this.elRef.nativeElement.style.width = `${snappedX}px`;
-    // event.preventDefault();
+    this.elRef.nativeElement.style.width = `${updatedWidth}px`;
+  }
+  updateNote() {
+
   }
 }
