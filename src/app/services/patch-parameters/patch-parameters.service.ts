@@ -11,15 +11,13 @@ export class PatchParametersService {
   public stepsPerBeat: number = 4; // Default steps per beat (16th notes)
   public sequence: Array<[string, { duration: number, rawAttack: number }]> = [];
   public updated$ = new Subject<void>();
+
   public get totalSteps(): number {
     return this.numberOfBeats * this.stepsPerBeat;
   }
-  public get stepDuration(): number {
-    return 60 / this.tempo;
-  }
 
   public get stepSizeMs() {
-    return (this.stepDuration / this.stepsPerBeat) * 1000;
+    return ((60 / this.tempo) / this.stepsPerBeat) * 1000;
   }
 
   constructor(private webMidiService: WebMidiService) { 
@@ -40,8 +38,8 @@ export class PatchParametersService {
     this.updated$.next();
   }
   setStepsPerBeat(steps: number) {
-    if (steps < 1 || steps > 16) {
-      console.error("Steps per beat must be between 1 and 16.");
+    if (steps < 1 || steps > 8) {
+      console.error("Steps per beat must be between 1 and 8.");
       return;
     }
     this.stepsPerBeat = steps;

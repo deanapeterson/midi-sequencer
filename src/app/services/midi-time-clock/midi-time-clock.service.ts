@@ -2,18 +2,13 @@ import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { SequenceDataService } from '../sequence-data/sequence-data.service';
 
-export interface TickEvent {
-  time: DOMHighResTimeStamp;
-  stepIndex: number;
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class MidiTimeClockService implements OnDestroy {
   private worker: Worker | null = null;
   private performance = window.performance;
-  public tick$ = new Subject<TickEvent>();
+  public tick$ = new Subject<DOMHighResTimeStamp>();
   public start$ = new Subject<void>();
   public stop$ = new Subject<void>();
   defaultInterval = 100; // Default interval is 100 milliseconds
@@ -38,6 +33,8 @@ export class MidiTimeClockService implements OnDestroy {
     this.stop$.complete();
   }
   start(interval: number = this.defaultInterval) {
+
+    console.log(interval);
     if (!this.worker) {
       console.error('Worker is not initialized.');
       return;
@@ -71,10 +68,7 @@ export class MidiTimeClockService implements OnDestroy {
 
         stepIndex = stepIndex % this.sequenceData.steps.length; // Loop through the sequence
 
-        this.tick$.next({
-          time: this.performance.now(),
-          stepIndex
-        });
+        this.tick$.next(this.performance.now());
         stepIndex++;
       };
     })
