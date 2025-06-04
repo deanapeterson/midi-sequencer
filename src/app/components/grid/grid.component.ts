@@ -19,16 +19,27 @@ export interface StepBlockDimensions {
   width: number;
 }
 
+export enum EditMode {
+  DRAW = 'draw',
+  DELETE = 'delete',
+  EDIT = 'edit',
+}
+
 @Component({
   selector: 'app-grid',
   imports: [CommonModule, NoteComponent],
   templateUrl: './grid.component.html',
   styleUrl: './grid.component.scss'
 })
-export class GridComponent implements OnInit,AfterViewInit {
+export class GridComponent implements OnInit, AfterViewInit {
   public gridSteps: StepParams[] = [];
   public noteRows: string[];
   private style!: HTMLStyleElement;
+  
+  public EditMode = EditMode;
+  public editMode = EditMode.DRAW;
+
+
   public stepBlockDimensions = signal<{ height: number, width: number }>({ height: 0, width: 0 });
   @ViewChildren('stepblocks') stepBlocks!: QueryList<HTMLElement>;
   constructor(
@@ -91,7 +102,7 @@ export class GridComponent implements OnInit,AfterViewInit {
   ngAfterViewInit() {
     this.stepBlocks?.changes.subscribe((blockChanges: QueryList<ElementRef>) => {
       const first = blockChanges.get(0);
-      if(!first){
+      if (!first) {
         return;
       }
       const dim = {
@@ -101,12 +112,39 @@ export class GridComponent implements OnInit,AfterViewInit {
       this.stepBlockDimensions.set(dim);
     })
   }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyhold(event: KeyboardEvent) {
+    const { key } = event;
+    console.log(key);
+    if (key === 'd') {
+      this.editMode = this.editMode == EditMode.DELETE ? EditMode.DRAW : EditMode.DELETE;
+      return;
+    }
+
+    if (key === 'e') {
+      this.editMode = this.editMode == EditMode.EDIT ? EditMode.DRAW : EditMode.EDIT;
+      return;
+    }
+
+  }
+
+
   @HostListener('click', ['$event.target'])
   onClick(target: HTMLElement) {
 
-    if (!target.classList.contains('step-block')) {
+    if (target.classList.contains('step-block')) {
+      this.addNote(target);
       return;
     }
+
+
+    if(this.editMode === EditMode.DELETE && target.classList.contains('note-inner')){
+      this.deleteNote(target);
+      return;
+
+    }
+
 
 
     const active = target.dataset['active'] === 'true';
@@ -124,9 +162,22 @@ export class GridComponent implements OnInit,AfterViewInit {
       return;
     }
 
-    target.dataset['active'] = 'true';
-    target.classList.add('active');
+
+  }
+
+  addNote(stepBlockEl: HTMLElement){
+    const stepIndex = parseInt(stepBlockEl.dataset['stepIndex'] || '', 10);
+    const note = stepBlockEl.dataset['note'] || '';
     this.sequenceData.addNote(stepIndex, note);
+  }
+
+  deleteNote(stepBlockEl: HTMLElement){
+    const stepIndex = parseInt(stepBlockEl.dataset['stepIndex'] || '', 10);
+    const noteName = stepBlockEl.dataset['noteName'] || '';
+
+
+    console.log('deleteNote', stepIndex, noteName);
+      this.sequenceData.removeNote(stepIndex, noteName);
   }
 
   private clearActiveStepBlocks() {

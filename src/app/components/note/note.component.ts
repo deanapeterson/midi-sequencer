@@ -32,6 +32,17 @@ export class NoteComponent implements OnChanges, OnInit {
     private params: PatchParametersService,
     private sequenceData: SequenceDataService
   ) { }
+  ngOnInit() {
+
+  }
+
+  get noteName(){
+    return this.note()?.note;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.setElementStyles(this.generateNoteStyleValues());
+  }
 
   generateNoteStyleValues(): NoteStyles {
     const sbDim = this.stepBlockDimensions();
@@ -57,12 +68,6 @@ export class NoteComponent implements OnChanges, OnInit {
     this.elRef.nativeElement.style.height = `${styles.height}px`;
     this.elRef.nativeElement.style.left = `${styles.left}px`;
     this.elRef.nativeElement.style.top = `${styles.top}px`;
-  }
-  ngOnInit() {
-    // this.elRef.nativeElement.setAttribute('draggable', 'true');
-  }
-  ngOnChanges(changes: SimpleChanges) {
-    this.setElementStyles(this.generateNoteStyleValues());
   }
 
   get currentWidth() {
