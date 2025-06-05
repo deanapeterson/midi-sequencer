@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectMidiInputOutputComponent } from './select-midi-input-output.component';
+import { PatternParamsComponent } from './pattern-params.component';
 
 describe('SelectMidiInputOutputComponent', () => {
-  let component: SelectMidiInputOutputComponent;
-  let fixture: ComponentFixture<SelectMidiInputOutputComponent>;
+  let component: PatternParamsComponent;
+  let fixture: ComponentFixture<PatternParamsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SelectMidiInputOutputComponent]
+      imports: [PatternParamsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SelectMidiInputOutputComponent);
+    fixture = TestBed.createComponent(PatternParamsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -138,30 +138,10 @@ export class GridComponent implements OnInit, AfterViewInit {
       return;
     }
 
-
     if(this.editMode === EditMode.DELETE && target.classList.contains('note-inner')){
       this.deleteNote(target);
       return;
-
     }
-
-
-
-    const active = target.dataset['active'] === 'true';
-    const stepIndex = parseInt(target.dataset['stepIndex'] || '', 10);
-    const note = target.dataset['note'] || '';
-
-    if (isNaN(stepIndex)) {
-      throw new Error('dataset[stepIndex] is not a number');
-    }
-
-    if (active) {
-      target.dataset['active'] = 'false';
-      target.classList.remove('active');
-      this.sequenceData.removeNote(stepIndex, note);
-      return;
-    }
-
 
   }
 

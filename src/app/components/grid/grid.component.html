@@ -9,7 +9,7 @@
         <div class="grid-row-steps">
 
             @for (stepParams of gridSteps; track $index) {
-            <div class="step-block">
+            <div class="grid-cell">
                 @if(stepParams.beatIndex === 0) {
                 <span class="beat-number">{{stepParams.beat}}</span>
                 }
@@ -23,7 +23,7 @@
         <div class="grid-row-header">{{rowNote}}</div>
         <div class="grid-row-steps">
             @for(stepParam of gridSteps; track $index; let stepIndex = $index) {
-            <div #stepblocks class="step-block" [attr.data-step-index]="stepParam.stepIndex"
+            <div #stepblocks class="grid-cell step-block" [attr.data-step-index]="stepParam.stepIndex"
                 [attr.data-beat-index]="stepParam.beatIndex" [attr.data-beat]="stepParam.beat"
                 [attr.data-note]="rowNote" [attr.data-active]="false"
                 [ngClass]="{'beat-start': (stepParam.beatIndex === 0), 'last': $last}">
@@ -46,7 +46,7 @@
         <div class="grid-row-steps">
 
             @for (stepParams of gridSteps; track $index) {
-            <div class="step-block">
+            <div class="grid-cell">
                 {{stepParams.stepCount}}
             </div>
             }
