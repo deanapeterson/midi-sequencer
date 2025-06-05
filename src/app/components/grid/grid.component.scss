@@ -1,5 +1,4 @@
 :host {
-
     user-select: none;
     .grid-wrapper{
         &.delete-mode {
@@ -11,20 +10,28 @@
     }
     
     .grid-header {
-        // height:24px;
         border-bottom: 1px solid #ccc;
     }
     .grid-header .grid-cell,
     .grid-footer .grid-cell {
         flex: 1 1 0;
         padding-left:4px;
+        border-right: 1px solid #ccc;
     }
+    
+    .grid-footer {
+        border-top: 1px solid #858585;
+        .grid-cell {
+            padding:4px;
+            font-size: 11px;
+        }
+    }
+
 
     .grid-row {
         display: flex;
         flex-direction: row;
         margin: auto;
-        border: 1px 1px 0 1px solid #ccc;
         align-content: stretch;
         align-items: stretch;
         position: relative;
@@ -95,7 +102,5 @@
         }
     }
 
-    .grid-footer {
-        font-size: 10px;
-    }
+
 }
