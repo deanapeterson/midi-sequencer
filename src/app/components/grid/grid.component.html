@@ -1,34 +1,57 @@
-<div class="grid-row grid-header">
-    <div class="grid-row-header"></div>
-    @for (stepParams of gridSteps; track $index) {
-    <div class="step-block">
-        @if(stepParams.beatIndex === 0) {
-        <span class="beat-number">{{stepParams.beat}}</span>
-        }
+<div class="grid-wrapper" [ngClass]="{
+    'delete-mode': editMode == EditMode.DELETE,
+    'edit-mode':editMode == EditMode.EDIT
+    }">
+
+    <div class="grid-row grid-header">
+        <div class="grid-row-header">
+        </div>
+        <div class="grid-row-steps">
+
+            @for (stepParams of gridSteps; track $index) {
+            <div class="grid-cell">
+                @if(stepParams.beatIndex === 0) {
+                <span class="beat-number">{{stepParams.beat}}</span>
+                }
+            </div>
+            }
+        </div>
+    </div>
+
+    @for(rowNote of noteRows; track $index; let rowIndex = $index;) {
+    <div class="grid-row" [ngClass]="{'odd': $odd}">
+        <div class="grid-row-header">{{rowNote}}</div>
+        <div class="grid-row-steps">
+            @for(stepParam of gridSteps; track $index; let stepIndex = $index) {
+            <div #stepblocks class="grid-cell step-block" [attr.data-step-index]="stepParam.stepIndex"
+                [attr.data-beat-index]="stepParam.beatIndex" [attr.data-beat]="stepParam.beat"
+                [attr.data-note]="rowNote" [attr.data-active]="false"
+                [ngClass]="{'beat-start': (stepParam.beatIndex === 0), 'last': $last}">
+            </div>
+            }
+            @for(stepParam of gridSteps; track $index) {
+            @let note = sequenceData.getNote(stepParam.stepIndex, rowNote);
+
+            @if(note) {
+            <app-note [note]="note" [stepIndex]="stepParam.stepIndex"
+                [stepBlockDimensions]="stepBlockDimensions()"></app-note>
+            }
+            }
+        </div>
     </div>
     }
-</div>
 
-@for(note of noteRows; track $index; ) {
-<div class="grid-row" [ngClass]="{'odd': $odd}">
-    <div class="grid-row-header">{{note}}</div>
-    @for(stepParam of gridSteps; track $index) {
-    <div class="step-block" 
-        [attr.data-step-index]="stepParam.stepIndex"
-        [attr.data-beat-index]="stepParam.beatIndex"    
-        [attr.data-beat]="stepParam.beat"
-        [attr.data-note]="note"
-        [attr.data-active]="false"
-        [ngClass]="{'beat-start': (stepParam.beatIndex === 0), 'last': $last}"></div>
-    }
-</div>
-}
+    <div class="grid-row grid-footer">
+        <div class="grid-row-header"></div>
+        <div class="grid-row-steps">
 
-<div class="grid-row grid-footer">
-    <div class="grid-row-header"></div>
-    @for (stepParams of gridSteps; track $index) {
-    <div class="step-block">
-        {{stepParams.stepCount}}
+            @for (stepParams of gridSteps; track $index) {
+            <div class="grid-cell">
+                {{stepParams.stepCount}}
+            </div>
+            }
+        </div>
     </div>
-    }
+
+
 </div>

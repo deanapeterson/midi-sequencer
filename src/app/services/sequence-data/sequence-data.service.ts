@@ -22,7 +22,6 @@ export interface StepNote {
   providedIn: 'root'
 })
 export class SequenceDataService {
-
   public steps: StepNote[][] = [];
   public noteRows: string[] = ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'];
   public clear$ = new Subject();
@@ -32,47 +31,58 @@ export class SequenceDataService {
     this.clear$.asObservable().subscribe(() => {
       this.generate();
     })
+
+    this.params.updated$.subscribe(() => {
+      this.generate();
+    })
+
   }
-
-
+  getNote(stepIndex: number, rowNote: string) {
+    const note = this.steps[stepIndex].find(noteData => noteData.note === rowNote);
+    return note;
+  }
   generate() {
     this.steps = Array.from({ length: this.params.totalSteps }, (_, i) => ([]));
+    console.log(this.steps);
   }
 
-  updateSequenceData(add = true, note: string, stepIndex: string | number): void {
-    if (!note || !stepIndex) {
-      console.error('Invalid parameters for updateSequenceData:', { note, stepIndex });
-      return;
-    }
-
-
-    if (typeof stepIndex === 'string') {
-      stepIndex = parseInt(stepIndex, 10);
-    }
-
-    // console.log(`@ stepIndex: ${stepIndex} ${add ? 'Adding' : 'Removing'} sequence data for note: ${note}, beat: ${beat}, step: ${stepIndex}`);
-    this.updateStep(stepIndex, note, add);
-  }
-
-
-  private updateStep(stepIndex: number, note: string, add: boolean): void {
+  public addNote(stepIndex: number, note: string): void {
     const stepData = this.steps[stepIndex];
 
-    if (!add) {
-      const noteIndex = stepData.findIndex(n => n.note === note);
-      if (noteIndex !== -1) {
-        stepData.splice(noteIndex, 1);
-      }
+    // no duplicate notes on a step.
+    if (this.getNote(stepIndex, note)) {
       return;
     }
-
 
     stepData.push({
       note: note,
       options: {
-        duration: 0.5
+        duration: this.params.stepSizeMs
       }
     })
   }
 
+  removeNote(stepIndex: number, note: string) {
+    const stepData = this.steps[stepIndex];
+    const noteIndex = stepData.findIndex(n => n.note === note);
+    if (noteIndex !== -1) {
+      stepData.splice(noteIndex, 1);
+    }
+    return;
+  }
+
+  updateNoteDuration(stepIndex: number, noteName: string, stepDuration: number) {
+    const stepNote = this.getNote(stepIndex, noteName);
+
+    if (!stepNote) {
+      return;
+    }
+
+    const stepOptions = stepNote.options || {};
+
+    Object.assign(stepOptions, {
+      duration: stepDuration * this.params.stepSizeMs
+    })
+    stepNote.options = stepOptions;
+  }
 }

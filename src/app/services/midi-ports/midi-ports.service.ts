@@ -1,27 +1,36 @@
 import { Injectable } from '@angular/core';
 import { WebMidiService } from '../web-midi/web-midi.service';
-import { Input as MidiInput, Output as MidiOutput } from 'webmidi';
+import { Output as MidiOutput } from 'webmidi';
+import { LocalStoreService } from '../local-store/local-store.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MidiPortsService {
-  public availableInputs: MidiInput[] = [];
+  // TODO: Implement InputPorts
   public availableOutputs: MidiOutput[] = [];
-  public selectedInputPort: MidiInput | null = null;
   public selectedOutputPort: MidiOutput | null = null;
 
-  constructor(private webMidiService: WebMidiService) {
+
+  private readonly OUTPUT_PORT_STORAGE_KEY = 'SELECTED_OUTPUT_PORT_NAME';
+
+  constructor(private webMidiService: WebMidiService, private localStore: LocalStoreService) {
+
+    const preSelectedOutputPortName = this.localStore.getItem(this.OUTPUT_PORT_STORAGE_KEY);
+
+
     this.webMidiService.ready$.then(() => {
-      this.availableInputs = this.webMidiService.webMidi.inputs;
       this.availableOutputs = this.webMidiService.webMidi.outputs;
+
+      if(preSelectedOutputPortName) {
+        const preSelectedOutputPort = this.availableOutputs.find(port=> port.name === preSelectedOutputPortName);
+        preSelectedOutputPort && this.setOutputPort(preSelectedOutputPort);
+      }
     });
   }
 
-  setInputPort(portName: MidiInput) {
-    this.selectedInputPort = portName;
-  }
-  setOutputPort(portName: MidiOutput) {
-    this.selectedOutputPort = portName;
+  setOutputPort(port: MidiOutput) {
+    this.selectedOutputPort = port;
+    this.localStore.setItem(this.OUTPUT_PORT_STORAGE_KEY, port.name);
   }
 }

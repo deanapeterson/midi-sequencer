@@ -1,17 +1,65 @@
 :host {
 
+    user-select: none;
+    .grid-wrapper{
+        &.delete-mode {
+            box-shadow: 0 0 5px 2px red;
+        }
+        &.edit-mode {
+            box-shadow: 0 0 5px 2px green;
+        }
+    }
+    
+    .grid-header {
+        // height:24px;
+        border-bottom: 1px solid #ccc;
+    }
+    .grid-header .grid-cell,
+    .grid-footer .grid-cell {
+        flex: 1 1 0;
+        padding-left:4px;
+    }
 
     .grid-row {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
         margin: auto;
-        width: 66vw;
         border: 1px 1px 0 1px solid #ccc;
         align-content: stretch;
         align-items: stretch;
+        position: relative;
 
-        &:not(.grid-header,.grid-footer):hover {
+        .grid-row-steps {
+            position: relative;
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: row;
+            align-items: flex-start;
+            align-content: stretch;
+            align-items: stretch;
+
+            .step-block {
+                flex: 1 1 0;
+                border-left: 1px solid #ccc;
+
+                &.beat-start {
+                    background-color: #0ba9dd1d;
+                }
+
+                &:last-child {
+                    border-right: 1px solid #ccc;
+                }
+
+                &[data-active='true'] {
+                    background-color: #1f217f75;
+                }
+            }
+
+
+        }
+
+
+        &:not(.grid-header, .grid-footer):hover {
             background-color: #e50b0b17 !important;
 
             >.note-name {
@@ -20,10 +68,14 @@
             }
         }
 
+        .grid-header,
+        .grid-footer {
+            background-color: #efefef;
+            color: #3e3e3e1d
+        }
+
         .grid-row-header {
             width: 66px;
-            // background-color: #824444;
-            // color: #fff;
             padding: 8px;
             font-size: 13px;
             border-right: 1px solid #ccc;
@@ -41,24 +93,9 @@
         &.odd {
             background-color: #e6e6e6;
         }
+    }
 
-        >.step-block {
-            flex: 1 1 0;
-
-            border-left: 1px solid #ccc;
-
-            &.beat-start {
-                background-color: #0ba9dd1d;
-            }
-
-            &:last-child {
-                border-right: 1px solid #ccc;
-            }
-
-            &[data-active='true'] {
-                background-color: #1f217f75;
-            }
-        }
-
+    .grid-footer {
+        font-size: 10px;
     }
 }

@@ -1,0 +1,15 @@
+:host {
+    display: flex;
+    flex-direction: row;
+    align-content: stretch;
+    align-items: stretch;
+    position: absolute;
+    border-radius: 10px;
+    background-color: rgb(150, 77, 183);
+    .note-inner {
+        background-color:none;
+        // background-color:#efefef;
+        opacity:.1;/*  */
+        flex: 1 1 auto;
+    }
+}

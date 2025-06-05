@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Input as MidiInput, Output as MidiOutput, WebMidi } from 'webmidi';
+import { WebMidi } from 'webmidi';
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +13,7 @@ export class WebMidiService {
     });
   }
 
-  private init(resolve: any, reject: (reason?: any) => void) :void{
+  private init(resolve: any, reject: (reason?: any) => void): void {
     const promise = WebMidi
       .enable()
       .catch(err => {
@@ -22,9 +21,9 @@ export class WebMidiService {
         throw err;
       });
 
-      promise.then(() => {
-       resolve(true);
-      });
+    promise.then(() => {
+      resolve(true);
+    });
 
   }
 }

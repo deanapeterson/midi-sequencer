@@ -1,0 +1,7 @@
+<div class="note-inner"
+    [attr.data-step-index]="stepIndex()"
+    [attr.data-note-name]="noteName"
+    (dragstart)="onDragStart($event)"
+    (drag)="onDrag($event)"
+    (dragend)="onDragEnd($event)"
+    draggable="true"></div>
