@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PatchParametersService } from './patch-parameters.service';
+import { PatternParamsService } from './pattern-params';
 
 describe('PatchParametersService', () => {
-  let service: PatchParametersService;
+  let service: PatternParamsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PatchParametersService);
+    service = TestBed.inject(PatternParamsService);
   });
 
   it('should be created', () => {

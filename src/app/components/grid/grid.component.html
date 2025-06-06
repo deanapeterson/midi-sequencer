@@ -18,21 +18,21 @@
         </div>
     </div>
 
-    @for(rowNote of noteRows; track $index; let rowIndex = $index;) {
+    @for(rowNote of params.scale$ | async; track $index; let rowIndex = $index;) {
     <div class="grid-row" [ngClass]="{'odd': $odd}">
         <div class="grid-row-header grid-cell">
-            {{rowNote}}
+            {{rowNote.note}}
         </div>
         <div class="grid-row-steps-wrapper">
             @for(stepParam of gridSteps; track $index; let stepIndex = $index) {
             <div #stepblocks class="grid-cell step-block" [attr.data-step-index]="stepParam.stepIndex"
                 [attr.data-beat-index]="stepParam.beatIndex" [attr.data-beat]="stepParam.beat"
-                [attr.data-note]="rowNote" [attr.data-active]="false"
+                [attr.data-note]="rowNote.note" [attr.data-active]="false"
                 [ngClass]="{'beat-start': (stepParam.beatIndex === 0), 'last-grid-cell': $last}">
             </div>
             }
             @for(stepParam of gridSteps; track $index) {
-            @let note = sequenceData.getNote(stepParam.stepIndex, rowNote);
+            @let note = sequenceData.getNote(stepParam.stepIndex, rowNote.note);
 
             @if(note) {
             <app-note [note]="note" [stepIndex]="stepParam.stepIndex"

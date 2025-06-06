@@ -1,4 +1,4 @@
-<div class="columns-5 gap-4">
+<div class="columns-4 gap-4">
   <!-- <div>
 
     <mat-form-field>
@@ -25,36 +25,60 @@
 
     <mat-form-field>
       <mat-label>Select Tempo</mat-label>
-          <mat-select [value]="params.tempo" (selectionChange)="params.setTempo($event.value)">
-            @for (i of availableTempos; track $index) {
-            <mat-option [value]="i">{{i}}</mat-option>
-            }
-          </mat-select>
+      <mat-select [value]="params.tempo" (selectionChange)="params.setTempo($event.value)">
+        @for (i of availableTempos; track $index) {
+        <mat-option [value]="i">{{i}}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
   </div>
   <div>
 
     <mat-form-field>
       <mat-label>Steps Per Beat</mat-label>
-          <mat-select [value]="params.stepsPerBeat" (selectionChange)="params.setStepsPerBeat($event.value)">
-            @for (i of availableStepsPerBeat; track $index) {
-            <mat-option [value]="i">{{i}}</mat-option>
-            }
-          </mat-select>
+      <mat-select [value]="params.stepsPerBeat" (selectionChange)="params.setStepsPerBeat($event.value)">
+        @for (i of availableStepsPerBeat; track $index) {
+        <mat-option [value]="i">{{i}}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field>
       <mat-label>Number of Beats</mat-label>
-          <mat-select [value]="params.numberOfBeats" (selectionChange)="params.setNumberOfBeats($event.value)">
-            @for (i of availableBeats; track $index) {
-            <mat-option [value]="i">{{i}}</mat-option>
-            }
-          </mat-select>
+      <mat-select [value]="params.numberOfBeats" (selectionChange)="params.setNumberOfBeats($event.value)">
+        @for (i of availableBeats; track $index) {
+        <mat-option [value]="i">{{i}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="columns-4 gap-4">
+  <div>
+    <mat-form-field>
+      <mat-label>Select Key</mat-label>
+      <mat-select [value]="params.scaleKey" (selectionChange)="params.setScaleKey($event.value)">
+        @for (i of scales.getAllKeys(); track $index) {
+        <mat-option [value]="i">{{i}}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
   </div>
   <div>
-    stepSizeMs: {{params.stepSizeMs}}
-
+    <mat-form-field>
+      <mat-label>Select Scale</mat-label>
+      <mat-select [value]="params.scaleType" (selectionChange)="params.setScaleType($event.value)">
+        @for (i of scales.getAvailableScales(); track $index) {
+        <mat-option [value]="i">{{i}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
   </div>
+
+
+
+
+
 </div>
