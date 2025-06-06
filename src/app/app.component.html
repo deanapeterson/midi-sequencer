@@ -1,15 +1,20 @@
-<div class="wrapper">
-  <header>
-    <h1>Midi Step Sequencer</h1>
+<mat-drawer-container [hasBackdrop]="false">
+  <div class="wrapper">
+    <header>
+      <h1>Midi Step Sequencer</h1>
 
-    <app-pattern-params></app-pattern-params>
-    <app-transport></app-transport>
+      <app-pattern-params></app-pattern-params>
+      <app-transport></app-transport>
 
-  </header>
-  <article>
-    <app-grid></app-grid>
-  </article>
-  <footer>
+    </header>
+    <article>
+      <app-grid></app-grid>
+    </article>
+    <footer>
+    </footer>
+  </div>
 
-  </footer>
-</div>
+  <mat-sidenav #sideNav [position]="'end'" mode="over">
+    <app-edit-selected></app-edit-selected>
+  </mat-sidenav>
+</mat-drawer-container>

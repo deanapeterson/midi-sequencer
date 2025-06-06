@@ -3,7 +3,7 @@ import { PatchParametersService } from '../patch-parameters/patch-parameters.ser
 import { Subject } from 'rxjs';
 
 
-interface PlayNoteOptions {
+export interface PlayNoteOptions {
   duration?: number;
   attack?: number;
   rawAttack?: number;
@@ -37,9 +37,9 @@ export class SequenceDataService {
     })
 
   }
-  getNote(stepIndex: number, rowNote: string) {
-    const note = this.steps[stepIndex].find(noteData => noteData.note === rowNote);
-    return note;
+  getNote(stepIndex: number, note: string): StepNote | undefined {
+    const stepNote = this.steps[stepIndex].find(noteData => noteData.note === note);
+    return stepNote;
   }
   generate() {
     this.steps = Array.from({ length: this.params.totalSteps }, (_, i) => ([]));
@@ -84,5 +84,21 @@ export class SequenceDataService {
       duration: stepDuration * this.params.stepSizeMs
     })
     stepNote.options = stepOptions;
+  }
+
+  updateNoteAttackVelocity(note: string, stepIndex: number, velocityValue: number){
+    const stepNote = this.getNote(stepIndex, note);
+
+    if(!stepNote){
+      return;
+    }
+    const stepNoteOptions: PlayNoteOptions = stepNote.options || {};
+
+    // if (Number.isInteger(velocityValue)) {
+    //   stepNoteOptions.attack = Math.round((velocityValue / 127) * 100)/100;
+    // }
+    // console.log(stepNoteOptions.attack);
+    stepNoteOptions['rawAttack'] = velocityValue;
+    stepNote.options = stepNoteOptions;
   }
 }

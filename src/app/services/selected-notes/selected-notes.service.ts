@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { PlayNoteOptions, SequenceDataService } from '../sequence-data/sequence-data.service';
 
 interface SelectedNote {
   note: string;
@@ -11,12 +12,15 @@ interface SelectedNote {
 })
 export class SelectedNotesService {
   selected: SelectedNote[] = [];
+  hasSelections$ = new Subject<void>();
+  isEmpty$ = new Subject<void>();
   requestSelectAll$ = new Subject<void>();
   requestDeselectAll$ = new Subject<void>();
-  constructor() { }
-  get hasSelection(){
+  constructor(private sequenceData: SequenceDataService) { }
+  get hasSelection() {
     return this.selected.length > 0;
   }
+
   addNote(note: string, stepIndex: number) {
     const isDuplicate = !this.selected.find(selectedNote => selectedNote.note === note && selectedNote.stepIndex === stepIndex);
     // No duplicates
@@ -25,8 +29,8 @@ export class SelectedNotesService {
       this.selected.push({
         note, stepIndex
       })
-      console.log(`${note} at ${stepIndex} has been added: ${this.isSelected(note,stepIndex)}`)
-
+      console.log(`${note} at ${stepIndex} has been added: ${this.isSelected(note, stepIndex)}`)
+      this.hasSelections$.next();
     }
   }
   removeNote(note: string, stepIndex: number) {
@@ -38,7 +42,13 @@ export class SelectedNotesService {
       this.selected = this.selected.filter(selectedNote =>
         !(selectedNote.note === note && selectedNote.stepIndex === stepIndex)
       );
-      console.log(`${note} at ${stepIndex} has been removed: ${!this.isSelected(note,stepIndex)}`)
+
+      if (this.hasSelection === false) {
+        this.isEmpty$.next();
+      }
+
+
+      console.log(`${note} at ${stepIndex} has been removed: ${!this.isSelected(note, stepIndex)}`)
     }
   }
 
@@ -50,12 +60,20 @@ export class SelectedNotesService {
     return !!selected;
   }
 
-  requestSelectAll(){
+  requestSelectAll() {
     this.requestSelectAll$.next();
   }
 
-  requestDeselectAll(){
+  requestDeselectAll() {
     this.requestDeselectAll$.next();
+  }
+
+  requestVelocityChange(velocityValue: number) {
+
+    this.selected.forEach((selectedNote) => {
+      const { note, stepIndex } = selectedNote;
+      this.sequenceData.updateNoteAttackVelocity(note, stepIndex, velocityValue);
+    })
   }
 
 }
