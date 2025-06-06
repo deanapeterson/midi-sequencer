@@ -1,7 +1,9 @@
-import { AfterViewInit, Component, computed, effect, ElementRef, HostListener, input, OnChanges, OnInit, Signal, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, ElementRef, HostListener, input, InputSignal, OnChanges, OnInit, Signal, SimpleChanges, ViewChild } from '@angular/core';
 import { SequenceDataService, StepNote } from '../../services/sequence-data/sequence-data.service';
 import { StepBlockDimensions } from '../grid/grid.component';
 import { PatchParametersService } from '../../services/patch-parameters/patch-parameters.service';
+import { CommonModule } from '@angular/common';
+import { SelectedNotesService } from '../../services/selected-notes/selected-notes.service';
 
 
 
@@ -14,7 +16,7 @@ interface NoteStyles {
 
 @Component({
   selector: 'app-note',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './note.component.html',
   styleUrl: './note.component.scss'
 })
@@ -27,17 +29,34 @@ export class NoteComponent implements OnChanges, OnInit {
   private dragStartX!: number;
 
   private stepBlockWidth = 0;
+  public selected = false;
   constructor(
     private elRef: ElementRef<HTMLElement>,
     private params: PatchParametersService,
-    private sequenceData: SequenceDataService
-  ) { }
+    private sequenceData: SequenceDataService,
+    private selectedNotes: SelectedNotesService
+  ) {
+
+    this.selectedNotes.requestSelectAll$.subscribe(()=>{
+      this.select();
+    })
+    this.selectedNotes.requestDeselectAll$.subscribe(()=>{
+      this.deSelect();
+    })
+
+  }
   ngOnInit() {
 
   }
 
-  get noteName(){
-    return this.note()?.note;
+  
+
+  getNote() {
+    return (this.note as InputSignal<StepNote>)().note as string;
+  }
+
+  getStepIndex() {
+    return (this.stepIndex as InputSignal<number>)() as number;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -49,7 +68,7 @@ export class NoteComponent implements OnChanges, OnInit {
     this.stepBlockWidth = sbDim?.width || 0;
 
     const stepIndex = this.stepIndex();
-    
+
     const height = (sbDim?.height || 10) - 4;
     const width = (sbDim?.width || 20) - 4;
     const left = ((stepIndex || 0) * (sbDim?.width || 20)) + 2;
@@ -108,5 +127,39 @@ export class NoteComponent implements OnChanges, OnInit {
     this.elRef.nativeElement.style.width = `${updatedWidth}px`;
   }
 
+  @HostListener('click', ['$event.target'])
+  onClick(target: HTMLElement) {
+    if (!target.classList.contains('note-inner')) {
+      return;
+    }
+    
+    this.selected
+      ? this.deSelect()
+      : this.select();
+  }
   
+  get nativeClassList(): DOMTokenList{
+    return this.elRef.nativeElement.classList;
+  }
+  
+  addRemoveClass(className: string, remove = false){
+    if(remove){ 
+      this.nativeClassList.remove(className);
+      return;
+    }
+    
+    this.nativeClassList.add(className);
+  }
+  
+  
+  select(){
+    this.selected = true;
+    this.addRemoveClass('selected');
+    this.selectedNotes.addNote(this.getNote(), this.getStepIndex());
+  }
+  deSelect(){
+    this.selected = false;
+    this.addRemoveClass('selected', true);
+    this.selectedNotes.removeNote(this.getNote(), this.getStepIndex());
+  }
 }

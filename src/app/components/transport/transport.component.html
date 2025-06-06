@@ -1,11 +1,21 @@
-    <button mat-mini-fab (click)="transport.start()">
-      <mat-icon>play_circle</mat-icon>
-    </button>
-    &nbsp;
-    <button mat-mini-fab (click)="transport.stop()">
-      <mat-icon>stop</mat-icon>
-    </button>
-    &nbsp;
-    <button mat-mini-fab (click)="sequenceData.clear$.next(undefined)" title="Clear Grid">
-      <mat-icon>clear</mat-icon>
-    </button>
+<button mat-mini-fab (click)="transport.start()">
+  <mat-icon>play_circle</mat-icon>
+</button>
+&nbsp;
+<button mat-mini-fab (click)="transport.stop()">
+  <mat-icon>stop</mat-icon>
+</button>
+&nbsp;
+<button mat-mini-fab (click)="sequenceData.clear$.next(undefined)" title="Clear Grid">
+  <mat-icon>clear</mat-icon>
+</button>
+&nbsp;
+@if(selected.hasSelection) {
+<button mat-button (click)="selected.requestDeselectAll()">
+  Deselect All
+</button>
+} @else {
+<button mat-button (click)="selected.requestSelectAll()">
+  Select All
+</button>
+}

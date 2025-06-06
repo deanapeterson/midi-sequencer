@@ -35,7 +35,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   public gridSteps: StepParams[] = [];
   public noteRows: string[];
   private style!: HTMLStyleElement;
-  
+
   public EditMode = EditMode;
   public editMode = EditMode.DRAW;
 
@@ -130,51 +130,48 @@ export class GridComponent implements OnInit, AfterViewInit {
   }
 
   @HostListener('contextmenu', ['$event'])
-  onContextmenu($event:PointerEvent){
-    const {target} = $event;
-    
-    $event.preventDefault();
-    
-    if(!target){
+  onContextmenu($event: PointerEvent) {
+    const { target } = $event;
+
+    if ($event.shiftKey) {
       return;
     }
 
-    if((target as HTMLElement).classList.contains('note-inner')){
+
+    if (!target) {
+      return;
+    }
+    $event.preventDefault();
+    if ((target as HTMLElement).classList.contains('note-inner')) {
       this.deleteNote(target as HTMLElement);
       return;
     }
 
   }
 
-
   @HostListener('click', ['$event.target'])
   onClick(target: HTMLElement) {
-
     if (target.classList.contains('step-block')) {
       this.addNote(target);
       return;
     }
 
-    if(this.editMode === EditMode.DELETE && target.classList.contains('note-inner')){
+    if (this.editMode === EditMode.DELETE && target.classList.contains('note-inner')) {
       this.deleteNote(target);
       return;
     }
-
   }
 
-  addNote(stepBlockEl: HTMLElement){
+  addNote(stepBlockEl: HTMLElement) {
     const stepIndex = parseInt(stepBlockEl.dataset['stepIndex'] || '', 10);
     const note = stepBlockEl.dataset['note'] || '';
     this.sequenceData.addNote(stepIndex, note);
   }
 
-  deleteNote(stepBlockEl: HTMLElement){
+  deleteNote(stepBlockEl: HTMLElement) {
     const stepIndex = parseInt(stepBlockEl.dataset['stepIndex'] || '', 10);
     const noteName = stepBlockEl.dataset['noteName'] || '';
-
-
-    // console.log('deleteNote', stepIndex, noteName);
-      this.sequenceData.removeNote(stepIndex, noteName);
+    this.sequenceData.removeNote(stepIndex, noteName);
   }
 
   private clearActiveStepBlocks() {

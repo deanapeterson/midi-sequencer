@@ -1,6 +1,7 @@
 <div class="note-inner"
+    [ngClass]="{'selected':selected}"
     [attr.data-step-index]="stepIndex()"
-    [attr.data-note-name]="noteName"
+    [attr.data-note-name]="getNote()"
     (dragstart)="onDragStart($event)"
     (drag)="onDrag($event)"
     (dragend)="onDragEnd($event)"
