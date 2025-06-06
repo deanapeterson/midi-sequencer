@@ -129,6 +129,23 @@ export class GridComponent implements OnInit, AfterViewInit {
 
   }
 
+  @HostListener('contextmenu', ['$event'])
+  onContextmenu($event:PointerEvent){
+    const {target} = $event;
+    
+    $event.preventDefault();
+    
+    if(!target){
+      return;
+    }
+
+    if((target as HTMLElement).classList.contains('note-inner')){
+      this.deleteNote(target as HTMLElement);
+      return;
+    }
+
+  }
+
 
   @HostListener('click', ['$event.target'])
   onClick(target: HTMLElement) {
@@ -156,7 +173,7 @@ export class GridComponent implements OnInit, AfterViewInit {
     const noteName = stepBlockEl.dataset['noteName'] || '';
 
 
-    console.log('deleteNote', stepIndex, noteName);
+    // console.log('deleteNote', stepIndex, noteName);
       this.sequenceData.removeNote(stepIndex, noteName);
   }
 
