@@ -10,10 +10,11 @@ import {
     PatternParamsComponent
 } from './components/pattern-params/pattern-params.component';
 import { TransportComponent } from './components/transport/transport.component';
+import { LfoComponent } from "./components/lfo-widget/lfo-widget.component";
 
 @Component({
   selector: 'app-root',
-  imports: [GridComponent, CommonModule, PatternParamsComponent, MatIconModule, MatButtonModule, TransportComponent],
+  imports: [GridComponent, CommonModule, PatternParamsComponent, MatIconModule, MatButtonModule, TransportComponent, LfoComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

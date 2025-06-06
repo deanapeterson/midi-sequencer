@@ -1,0 +1,183 @@
+// Angular LFO to MIDI Widget
+
+// 1. app.module.ts
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { AppComponent } from './app.component';
+import { LfoComponent } from './lfo/lfo.component';
+
+@NgModule({
+  declarations: [AppComponent, LfoComponent],
+  imports: [BrowserModule, FormsModule],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+
+// 2. app.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  template: '<app-lfo></app-lfo>'
+})
+export class AppComponent {}
+
+// 3. lfo.component.ts
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+
+@Component({
+  selector: 'app-lfo',
+  templateUrl: './lfo.component.html',
+  styleUrls: ['./lfo.component.css']
+})
+export class LfoComponent implements AfterViewInit {
+  @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+  ctx!: CanvasRenderingContext2D;
+  drawing = false;
+  points: { x: number; y: number }[] = [];
+  ccNumber = 1;
+  interval = 100;
+  mode: 'draw' | 'sine' | 'square' | 'saw' = 'draw';
+  midiOutput: WebMidi.MIDIOutput | null = null;
+  status = 'Waiting for MIDI...';
+  readonly NUM_SAMPLES = 64;
+
+  ngAfterViewInit() {
+    const canvas = this.canvasRef.nativeElement;
+    this.ctx = canvas.getContext('2d')!;
+
+    navigator.requestMIDIAccess().then(midiAccess => {
+      for (const output of midiAccess.outputs.values()) {
+        this.midiOutput = output;
+        break;
+      }
+      this.status = this.midiOutput ? `MIDI Connected: ${this.midiOutput.name}` : 'No MIDI Output Found';
+    });
+  }
+
+  onMouseDown(e: MouseEvent) {
+    if (this.mode !== 'draw') return;
+    this.drawing = true;
+    this.points = [this.getPos(e)];
+  }
+
+  onMouseMove(e: MouseEvent) {
+    if (!this.drawing || this.mode !== 'draw') return;
+    this.points.push(this.getPos(e));
+    this.drawLine();
+  }
+
+  onMouseUp() {
+    this.drawing = false;
+  }
+
+  getPos(e: MouseEvent): { x: number; y: number } {
+    const rect = this.canvasRef.nativeElement.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  drawLine() {
+    this.ctx.clearRect(0, 0, 600, 200);
+    if (this.points.length < 2) return;
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.points[0].x, this.points[0].y);
+    for (let i = 1; i < this.points.length; i++) {
+      this.ctx.lineTo(this.points[i].x, this.points[i].y);
+    }
+    this.ctx.strokeStyle = '#0f0';
+    this.ctx.lineWidth = 2;
+    this.ctx.stroke();
+  }
+
+  handleModeChange() {
+    this.points = [];
+    if (this.mode !== 'draw') {
+      this.sampleCurve(); // redraw preset
+    } else {
+      this.ctx.clearRect(0, 0, 600, 200);
+    }
+  }
+
+  sampleCurve(): number[] {
+    const values: number[] = [];
+    const w = 600, h = 200;
+    if (this.mode !== 'draw') {
+      for (let i = 0; i < this.NUM_SAMPLES; i++) {
+        const t = i / this.NUM_SAMPLES;
+        let val = 0;
+        if (this.mode === 'sine') val = 0.5 + 0.5 * Math.sin(2 * Math.PI * t);
+        else if (this.mode === 'square') val = t < 0.5 ? 1 : 0;
+        else if (this.mode === 'saw') val = t;
+        values.push(Math.round(val * 127));
+        this.points.push({ x: w * t, y: h * (1 - val) });
+      }
+      this.drawLine();
+      return values;
+    } else {
+      for (let i = 0; i < this.NUM_SAMPLES; i++) {
+        const x = i / (this.NUM_SAMPLES - 1) * w;
+        let closest = this.points.reduce((prev, curr) =>
+          Math.abs(curr.x - x) < Math.abs(prev.x - x) ? curr : prev
+        );
+        let y = closest.y;
+        values.push(Math.round(127 * (1 - y / h)));
+      }
+      return values;
+    }
+  }
+
+  sendLFO() {
+    if (!this.midiOutput) return alert('Connect MIDI first.');
+    const values = this.sampleCurve();
+    let i = 0;
+    setInterval(() => {
+      if (i >= values.length) i = 0;
+      this.midiOutput!.send([0xB0, this.ccNumber, values[i]]);
+      i++;
+    }, this.interval);
+  }
+}
+
+// 4. lfo.component.html
+<h2>LFO Drawer → MIDI CC</h2>
+<canvas #canvas width="600" height="200"
+  (mousedown)="onMouseDown($event)"
+  (mousemove)="onMouseMove($event)"
+  (mouseup)="onMouseUp()"></canvas>
+<div id="controls">
+  <label>Mode:
+    <select [(ngModel)]="mode" (change)="handleModeChange()">
+      <option value="draw">Draw</option>
+      <option value="sine">Sine</option>
+      <option value="square">Square</option>
+      <option value="saw">Saw</option>
+    </select>
+  </label>
+  <label>CC #: <input type="number" [(ngModel)]="ccNumber" min="0" max="127"></label>
+  <label>Interval (ms): <input type="number" [(ngModel)]="interval"></label>
+  <button (click)="sendLFO()">Send LFO</button>
+</div>
+<p>{{ status }}</p>
+
+// 5. lfo.component.css
+canvas {
+  border: 1px solid #444;
+  background: #222;
+  cursor: crosshair;
+  display: block;
+  margin: 0 auto;
+}
+
+#controls {
+  text-align: center;
+  margin-top: 10px;
+}
+
+label, button, select, input {
+  margin: 0 5px;
+}
+
+h2, p {
+  text-align: center;
+}

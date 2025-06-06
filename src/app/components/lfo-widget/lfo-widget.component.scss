@@ -1,0 +1,20 @@
+canvas {
+  border: 1px solid #444;
+  background: #222;
+  cursor: crosshair;
+  display: block;
+  margin: 0 auto;
+}
+
+#controls {
+  text-align: center;
+  margin-top: 10px;
+}
+
+label, button, select, input {
+  margin: 0 5px;
+}
+
+h2, p {
+  text-align: center;
+}

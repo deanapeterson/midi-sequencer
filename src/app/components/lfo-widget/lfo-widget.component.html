@@ -1,0 +1,19 @@
+<h2>LFO Drawer → MIDI CC</h2>
+<canvas #canvas width="600" height="200"
+  (mousedown)="onMouseDown($event)"
+  (mousemove)="onMouseMove($event)"
+  (mouseup)="onMouseUp()"></canvas>
+<div id="controls">
+  <label>Mode:
+    <select [(ngModel)]="mode" (change)="handleModeChange()">
+      <option value="draw">Draw</option>
+      <option value="sine">Sine</option>
+      <option value="square">Square</option>
+      <option value="saw">Saw</option>
+    </select>
+  </label>
+  <label>CC #: <input type="number" [(ngModel)]="ccNumber" min="0" max="127"></label>
+  <label>Interval (ms): <input type="number" [(ngModel)]="interval"></label>
+  <button (click)="sendLFO()">Send LFO</button>
+</div>
+<p>{{ status }}</p>
