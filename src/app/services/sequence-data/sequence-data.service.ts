@@ -43,7 +43,7 @@ export class SequenceDataService {
   }
   generate() {
     this.steps = Array.from({ length: this.params.totalSteps }, (_, i) => ([]));
-    console.log(this.steps);
+    // console.log(this.steps);
   }
 
   public addNote(stepIndex: number, note: string): void {

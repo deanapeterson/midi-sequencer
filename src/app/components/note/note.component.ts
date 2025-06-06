@@ -49,9 +49,10 @@ export class NoteComponent implements OnChanges, OnInit {
     this.stepBlockWidth = sbDim?.width || 0;
 
     const stepIndex = this.stepIndex();
+    
     const height = (sbDim?.height || 10) - 4;
     const width = (sbDim?.width || 20) - 4;
-    const left = ((stepIndex || 0) * (sbDim?.width || 20)) + 4;
+    const left = ((stepIndex || 0) * (sbDim?.width || 20)) + 2;
     const top = 2;
 
     return {
@@ -84,7 +85,7 @@ export class NoteComponent implements OnChanges, OnInit {
   onDragEnd(event: DragEvent) {
     const stepLength = Math.ceil(this.currentWidth / this.stepBlockWidth);
     this.sequenceData.updateNoteDuration(this.stepIndex() as number, (this.note() as StepNote).note as string, stepLength);
-    console.log(stepLength);
+    // console.log(stepLength);
   }
 
   onDrag(event: DragEvent) {
@@ -97,7 +98,7 @@ export class NoteComponent implements OnChanges, OnInit {
     const deltaX = event.clientX - this.dragStartX;
     const newWidth = this.dragStartWidth + deltaX;
 
-    const updatedWidth = (Math.round(newWidth / this.stepBlockWidth) * this.stepBlockWidth) - 8;
+    const updatedWidth = (Math.round(newWidth / this.stepBlockWidth) * this.stepBlockWidth) - 4;
 
     if (updatedWidth >= this.params.totalSteps * this.stepBlockWidth) {
       return;
@@ -106,7 +107,6 @@ export class NoteComponent implements OnChanges, OnInit {
 
     this.elRef.nativeElement.style.width = `${updatedWidth}px`;
   }
-  updateNote() {
 
-  }
+  
 }
