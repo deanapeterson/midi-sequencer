@@ -14,7 +14,7 @@ export class PatternParamsService {
   public updated$ = new Subject<void>();
 
   public scaleKey = 'C';
-  public scaleType = 'major';
+  public scaleType = 'Major';
   public scale:NoteWithMidi[] = [];
   public scale$ = new BehaviorSubject<NoteWithMidi[]>([]);
 

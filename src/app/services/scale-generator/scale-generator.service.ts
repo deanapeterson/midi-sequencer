@@ -25,10 +25,10 @@ export class ScaleGeneratorService {
   };
 
   private scaleFormulas: Record<string, number[]> = {
-    'major': [2, 2, 1, 2, 2, 2, 1],
-    'naturalMinor': [2, 1, 2, 2, 1, 2, 2],
-    'harmonicMinor': [2, 1, 2, 2, 1, 3, 1],
-    'melodicMinor': [2, 1, 2, 2, 2, 2, 1]
+    'Major': [2, 2, 1, 2, 2, 2, 1],
+    'Natural Minor': [2, 1, 2, 2, 1, 2, 2],
+    'Harmonic Minor': [2, 1, 2, 2, 1, 3, 1],
+    'Melodic Minor': [2, 1, 2, 2, 2, 2, 1]
   };
 
   getAllKeys(): string[] {
