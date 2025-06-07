@@ -1,5 +1,5 @@
 import { Injectable, OutputOptions } from '@angular/core';
-import { PatchParametersService } from '../patch-parameters/patch-parameters.service';
+import { PatternParametersService } from '../pattern-parameters/pattern-parameters.service';
 import { Subject } from 'rxjs';
 
 
@@ -25,7 +25,7 @@ export class SequenceDataService {
   public steps: StepNote[][] = [];
   public noteRows: string[] = ['C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4'];
   public clear$ = new Subject();
-  constructor(public params: PatchParametersService) {
+  constructor(public params: PatternParametersService) {
     this.generate();
 
     this.clear$.asObservable().subscribe(() => {

@@ -5,7 +5,7 @@ import { Injectable, NgZone } from '@angular/core';
 
 import { MidiPortsService } from '../midi-ports/midi-ports.service';
 import { MidiTimeClockService } from '../midi-time-clock/midi-time-clock.service';
-import { PatchParametersService } from '../patch-parameters/patch-parameters.service';
+import { PatternParametersService } from '../pattern-parameters/pattern-parameters.service';
 import { SequenceDataService, StepNote } from '../sequence-data/sequence-data.service';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class TransportService {
 
   constructor(
     private ports: MidiPortsService,
-    private params: PatchParametersService,
+    private params: PatternParametersService,
     private sequenceData: SequenceDataService,
     private midiTimeClock: MidiTimeClockService,
     private ngZone: NgZone

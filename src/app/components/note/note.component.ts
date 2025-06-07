@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, computed, effect, ElementRef, HostListener, input, OnChanges, OnInit, Signal, SimpleChanges, ViewChild } from '@angular/core';
 import { SequenceDataService, StepNote } from '../../services/sequence-data/sequence-data.service';
 import { StepBlockDimensions } from '../grid/grid.component';
-import { PatchParametersService } from '../../services/patch-parameters/patch-parameters.service';
+import { PatternParametersService } from '../../services/pattern-parameters/pattern-parameters.service';
 
 
 
@@ -29,7 +29,7 @@ export class NoteComponent implements OnChanges, OnInit {
   private stepBlockWidth = 0;
   constructor(
     private elRef: ElementRef<HTMLElement>,
-    private params: PatchParametersService,
+    private params: PatternParametersService,
     private sequenceData: SequenceDataService
   ) { }
   ngOnInit() {

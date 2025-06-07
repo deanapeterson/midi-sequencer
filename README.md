@@ -1,5 +1,7 @@
 # Sequencer
 
+[Live Demo](https://deanapeterson.github.io/sequencer/)
+
 ## About this Project
 
 This is my attempt at creating a effective midi sequencer using Web Technology.

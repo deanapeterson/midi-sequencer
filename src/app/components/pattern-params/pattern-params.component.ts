@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 import { MidiPortsService } from '../../services/midi-ports/midi-ports.service';
-import { PatchParametersService } from '../../services/patch-parameters/patch-parameters.service';
+import { PatternParametersService } from '../../services/pattern-parameters/pattern-parameters.service';
 
 @Component({
   selector: 'app-pattern-params',
@@ -17,6 +17,6 @@ export class PatternParamsComponent {
   public availableTempos = [50, 65, 80, 95, 100, 110, 120, 140, 155, 160];
   public availableStepsPerBeat = [1, 2, 3, 4, 5, 6, 7, 8];
   public availableBeats = [1, 2, 3, 4, 5, 6, 7, 8];
-  constructor(public ports: MidiPortsService, public params: PatchParametersService) {
+  constructor(public ports: MidiPortsService, public params: PatternParametersService) {
   }
 }

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterContentInit, AfterRenderOptions, AfterRenderRef, AfterViewChecked, AfterViewInit, Component, computed, ElementRef, HostListener, NgZone, OnInit, QueryList, Renderer2, signal, ViewChild, ViewChildren } from '@angular/core';
 
-import { PatchParametersService } from '../../services/patch-parameters/patch-parameters.service';
+import { PatternParametersService } from '../../services/pattern-parameters/pattern-parameters.service';
 import { SequenceDataService } from '../../services/sequence-data/sequence-data.service';
 import { TransportService } from '../../services/transport/transport.service';
 import { NoteComponent } from '../note/note.component';
@@ -44,7 +44,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   @ViewChildren('stepblocks') stepBlocks!: QueryList<HTMLElement>;
   constructor(
     private ngZone: NgZone,
-    public params: PatchParametersService,
+    public params: PatternParametersService,
     public sequenceData: SequenceDataService,
     private transport: TransportService,
     private renderer: Renderer2,

@@ -5,7 +5,7 @@ import { WebMidiService } from '../web-midi/web-midi.service';
 @Injectable({
   providedIn: 'root'
 })
-export class PatchParametersService {
+export class PatternParametersService {
   public tempo: number = 120; // Default tempo in BPM
   public numberOfBeats: number = 4; // Default number of beats in the sequence
   public stepsPerBeat: number = 4; // Default steps per beat (16th notes)
