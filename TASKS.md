@@ -17,12 +17,27 @@
 - [ ] Cleanup Subscriptions (onDestroy)
 - [ ] Meaningful Tests.
 - [ ] Start Branching
-- [ ] 
 
 
 ## Development Needed
-- [ ] Multistep Notes (duration)
-- [ ] Velocity Editing
+- [x] Multistep Notes (duration)
 - [ ] 
 - [x] Store selected output port (Local Storage)
 
+
+### Styling
+
+
+### Layout
+- [ ] Note box positioning 
+  
+### UX
+- [ ] Space bar start/stop
+
+
+
+### Roadmap
+- [ ] Bulk Editing
+- [ ] Velocity Editing
+- [ ] Built in Synth
+- [ ] 

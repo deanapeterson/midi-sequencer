@@ -133,7 +133,7 @@ export class GridComponent implements OnInit, AfterViewInit {
   onContextmenu($event:PointerEvent){
     const {target} = $event;
     
-    $event.preventDefault();
+    // $event.preventDefault();
     
     if(!target){
       return;

@@ -1,11 +1,19 @@
 <div class="wrapper">
   <header>
     <h1>Midi Step Sequencer</h1>
-
+    <nav>
+      <button matButton
+        color="primary"
+        (click)="openAboutDialog()">About/How to use
+      </button>
+    </nav>
+    
+  </header>
+  <aside>
     <app-pattern-params></app-pattern-params>
     <app-transport></app-transport>
 
-  </header>
+  </aside>
   <article>
     <app-grid></app-grid>
   </article>

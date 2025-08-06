@@ -2,7 +2,16 @@
     --standard-border-color: #ccc;
     --darker-border-color: #858585;
 
-    user-select: none;
+    // user-select: none;
+
+        .grid-header,
+        .grid-footer {
+            .grid-cell {
+                padding-left: 2px;
+                color:#252222;
+            }
+        }
+
 
     .grid-row {
         position: relative;
@@ -16,8 +25,8 @@
             padding: 8px;
             font-size: 13px;
             text-align: center;
+            color:#858585;
         }
-
 
 
         .grid-row-steps-wrapper {
@@ -52,12 +61,13 @@
 
 
 
+
         &:not(.grid-header, .grid-footer):hover {
             background-color: #e50b0b17 !important;
 
             >.note-name {
                 background-color: #390b0b79;
-                color: #fff;
+                color: #1f1b1b;
             }
         }
     }

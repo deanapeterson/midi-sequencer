@@ -1,13 +1,32 @@
-
-
 .wrapper {
-    background-color: white;
-    width:66vw;
-    margin:auto;
+  background-color: white;
+  width: 66vw;
+  margin: auto;
 }
 
 article {
-    display:block;
-    margin-top:16px;
+  display: block;
+  margin-top: 16px;
 }
 
+header {
+  display: flex;
+  margin: 16px;
+  h1 {
+    flex: 1 1 auto;
+    font-size: 2rem;
+  }
+  nav {
+    flex: 0 1 auto;
+  }
+}
+
+aside {
+  display: block;
+  margin: 16px;
+}
+
+footer{
+    display:block;
+    margin: 16px;
+}
