@@ -31,4 +31,4 @@ jobs:
           with:
             node-version: '18.x'
         - run: npm install
-        - run: npm test:prod
+        - run: npm run test:prod
