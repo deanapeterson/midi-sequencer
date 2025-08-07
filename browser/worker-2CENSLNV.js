@@ -1,0 +1,1 @@
+(function(){let e=null,r=100,t;self.onmessage=function(n){let a=n.data;if(a==="start"||typeof a=="number"){if(t=typeof a=="number"?a:r,t=Math.round(t*1e3)/1e3,e)return;e=setInterval(()=>{postMessage("tick")},t);return}n.data=="stop"&&(clearInterval(e),e=null)}})();
