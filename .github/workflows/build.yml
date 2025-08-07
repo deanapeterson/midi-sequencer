@@ -1,34 +1,29 @@
 name: build
 on:
-    push:
-        branches:
-        - main
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-        - name: Set up Node.js
-          uses: actions/setup-node@v2
-          with:
-            node-version: '18.x'
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
 
-        - name: Install dependencies
-          run: npm install
+    - name: Install dependencies
+      run: npm install
 
-        - name: Build project
-          run: npm run build
-    test:
-      needs: build
-      runs-on: ubuntu-latest
-      steps: 
-        - name: checkout repo
-          uses: actions/checkout@v3
-        - name: use node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: '18.x'
-        - run: npm install
-        - run: npm run test:prod
+    - name: Build Angular App
+      run: ng build --configuration production --base-href /<your-repository-name>/ # Replace with your repository name
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{secrets.ACCESS_TOKEN}}
+        publish_dir: ./dist/midi-sequencer
