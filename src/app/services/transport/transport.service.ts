@@ -1,4 +1,4 @@
-import { map, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, map, Subject, takeUntil, takeWhile } from 'rxjs';
 import { OutputChannel } from 'webmidi';
 
 import { Injectable, NgZone } from '@angular/core';
@@ -6,17 +6,18 @@ import { Injectable, NgZone } from '@angular/core';
 import { MidiPortsService } from '../midi-ports/midi-ports.service';
 import { MidiTimeClockService } from '../midi-time-clock/midi-time-clock.service';
 import { PatternParametersService } from '../pattern-parameters/pattern-parameters.service';
-import { SequenceDataService, StepNote } from '../sequence-data/sequence-data.service';
+import {
+  SequenceDataService,
+  StepNote,
+} from '../sequence-data/sequence-data.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TransportService {
-
+  public isPlaying$ = new BehaviorSubject<boolean>(false);
   public stop$ = new Subject<void>();
   public stepIndex$ = new Subject<number>();
-
-  private _isPlaying = false;
 
   constructor(
     private ports: MidiPortsService,
@@ -24,65 +25,54 @@ export class TransportService {
     private sequenceData: SequenceDataService,
     private midiTimeClock: MidiTimeClockService,
     private ngZone: NgZone
-  ) { }
+  ) {}
   start() {
-
-    if (this._isPlaying) {
+    if (!this.ports.selectedOutputPort) {
+      console.error('No MIDI output port available.');
+      this.isPlaying$.next(false);
       return;
     }
-    console.log("Transport started");
-    this._isPlaying = true;
+
+    console.log('Transport started');
 
     const stepSizeMs = this.params.stepSizeMs;
     const numberOfSteps = this.params.totalSteps;
     let stepIndex = 0;
     this.ngZone.runOutsideAngular(() => {
+      this.midiTimeClock.tick$
+        .pipe(
+          takeUntil(this.stop$), // Stop the sequence when stop$ emits
+          map(() => {
+            const currentStepIndex = stepIndex;
 
-      this.midiTimeClock.tick$.pipe(
-        takeUntil(this.stop$), // Stop the sequence when stop$ emits
-        map(() => {
-          const currentStepIndex = stepIndex;
-
-          stepIndex = (stepIndex + 1) % numberOfSteps; // Increment step index and wrap around
-          this.stepIndex$.next(currentStepIndex); // Emit the current step index
-          return this.sequenceData.steps[currentStepIndex];
-        }),
-      ).subscribe((stepData: StepNote[]) => {
-        if (!this.ports.selectedOutputPort) {
-          console.error("No MIDI output port available.");
-          this.stop$.next();
-          return;
-        }
-
-        setTimeout(() => {
-          (stepData || []).forEach((item) => {
-            this.ports.selectedOutputPort?.playNote(item.note as string, item.options);
+            stepIndex = (stepIndex + 1) % numberOfSteps; // Increment step index and wrap around
+            this.stepIndex$.next(currentStepIndex); // Emit the current step index
+            return this.sequenceData.steps[currentStepIndex];
           })
-          
-        })
-      });
+        )
+        .subscribe((stepData: StepNote[]) => {
+          this.isPlaying$.next(true);
+          setTimeout(() => {
+            (stepData || []).forEach((item) => {
+              this.ports.selectedOutputPort?.playNote(
+                item.note as string,
+                item.options
+              );
+            });
+          });
+        });
       this.midiTimeClock.start(stepSizeMs); // Start the MIDI time clock with the step size
     });
-
-
   }
 
   stop() {
-    this._isPlaying = false;
     this.midiTimeClock.stop();
-    if (!this.ports.selectedOutputPort) {
-      console.error("No MIDI output port selected.");
-      return;
-    }
-
-    this.stop$.next(); // Emit a value to stop the sequence
+    this.stop$.next();
+    this.isPlaying$.next(false); // Emit a value to stop the sequence
     this.ports.selectedOutputPort?.sendAllNotesOff(); // Stop all notes on the channel
   }
 
-
   pause() {
-    console.log("Transport paused");
+    console.log('Transport paused');
   }
-
-
 }

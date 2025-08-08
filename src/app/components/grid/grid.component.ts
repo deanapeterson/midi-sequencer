@@ -72,7 +72,7 @@ export class GridComponent implements OnInit, AfterViewInit {
       this.style.textContent = ``;
     });
 
-    this.transport.stop$.subscribe(() => {
+    this.transport.isPlaying$.subscribe(() => {
       this.style.textContent = ``;
     });
     this.params.updated$.subscribe(() => {

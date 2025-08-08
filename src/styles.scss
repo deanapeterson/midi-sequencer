@@ -6,8 +6,19 @@
 html {
   color-scheme: light dark;
   @include mat.theme((
-    color: mat.$violet-palette,
+    color: mat.$blue-palette,
     typography: Roboto,
-    density: 0
+    density: -3
   ));
 }
+
+
+    .flat-fab-button {
+      // xxbackground-color: transparent !important; /* Remove background color */
+      box-shadow: none !important; /* Remove any shadow */
+      border: none !important; /* Remove any border */
+      min-width: unset !important; /* Allow width to shrink to content */
+      width: auto !important;
+      height: auto !important;
+      line-height: normal !important; /* Reset line-height if it affects icon centering */
+    }
