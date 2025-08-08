@@ -8,6 +8,7 @@ import { GridComponent } from './components/grid/grid.component';
 import { PatternParamsComponent } from './components/pattern-params/pattern-params.component';
 import { TransportComponent } from './components/transport/transport.component';
 import { AboutComponent } from './components/about/about.component';
+import { TinySynthService } from './services/tiny-synth/tiny-synth.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ import { AboutComponent } from './components/about/about.component';
 })
 export class AppComponent {
   title = 'Web MIDI Sequencer';
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog, public jzzSynth: TinySynthService) {}
   openAboutDialog(): void {
     this.dialog.open(AboutComponent, {});
   }
