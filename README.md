@@ -1,6 +1,6 @@
 # Sequencer
 
-[Live Demo](https://deanapeterson.github.io/sequencer/)
+[Live Demo](https://deanapeterson.github.io/midi-sequencer/)
 
 ## About this Project
 
